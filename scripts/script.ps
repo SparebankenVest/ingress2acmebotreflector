@@ -1,0 +1,20 @@
+# Your tenant id (in Azure Portal, under Azure Active Directory -> Overview )
+$TenantID="00000000-0000-0000-0000-000000000000”
+# Microsoft Graph App ID 
+$GraphAppId = "00000000-0000-0000-0000-000000000000"
+# Name of the manage identity (same as the Logic App name)
+$DisplayNameOfMSI=“managed-identity-name"
+# Check the Microsoft Graph documentation for the permission you need for the operation
+$PermissionName = "Acmebot.IssueCertificate"
+
+# Install the module (You need admin on the machine)
+Install-Module AzureAD
+
+Connect-AzureAD -TenantId $TenantID
+$MSI = (Get-AzureADServicePrincipal -Filter "displayName eq '$DisplayNameOfMSI'")
+Start-Sleep -Seconds 10
+$GraphServicePrincipal = Get-AzureADServicePrincipal -Filter "appId eq '$GraphAppId'"
+$AppRole = $GraphServicePrincipal.AppRoles | `
+Where-Object {$_.Value -eq $PermissionName -and $_.AllowedMemberTypes -contains "Application"}
+New-AzureAdServiceAppRoleAssignment -ObjectId $MSI.ObjectId -PrincipalId $MSI.ObjectId `
+-ResourceId $GraphServicePrincipal.ObjectId -Id $AppRole.Id
