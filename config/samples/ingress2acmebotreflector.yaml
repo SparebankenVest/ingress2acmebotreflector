@@ -47,7 +47,7 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: controller-manager
   namespace: spv-system
----  
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
