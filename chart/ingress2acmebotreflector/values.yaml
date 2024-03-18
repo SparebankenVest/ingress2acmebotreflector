@@ -1,0 +1,54 @@
+replicaCount: 1
+
+image: "dokken.azurecr.io/ingress2acmebotreflector:latest"
+backendURL: "https://func-keyvault-acme-bot-prod.azurewebsites.net"
+azureClientId: "360494f3-1b89-4c7d-b19f-d82e631ebd02"
+apiScope: "api://keyvault-acme-bot-prod"
+domains: "spv.no,spvsre.no" # comma-separated domains
+
+extraEnvs:
+  - name: HELLO
+    value: "HI"
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+containerPort: "8080"
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+minReadySeconds: ""
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
