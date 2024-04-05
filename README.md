@@ -60,7 +60,16 @@ UnDeploy the controller from the cluster:
 ```sh
 make undeploy
 ```
-
+### Helm chart installation
+The definition of the helm chart is found in the `chart/ingress2acmebotreflector` directory. 
+#### Install locally
+1. Clone repo locally: `git clone git@github.com:SparebankenVest/ingress2acmebotreflector.git`
+2. Go to chart directory: `cd ingress2acmebotreflector/chart`
+3. Insert required values in `values.yaml`. 
+3. Install chart on cluster via helm: `helm install my-ingress2acmebotreflector ingress2acmebotreflector`
+#### Install using self hosted helm repo
+1. Add helm repo: `helm repo add <REPO-NAME> <REPO-URL>`
+2. Install helm chart on cluster: `helm install my-ingress2acmebotreflector <REPO-NAME>/ingress2acmebotreflector`
 ## Contributing
 
 // TODO(user): Add detailed information on how you would like others to contribute to this project
