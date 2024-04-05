@@ -17,7 +17,7 @@ The image for the controller can be found on dockerhub: <https://hub.docker.com/
 3. Grant the managed-identity of the k8s cluster where the controller is access to the acmebot api, this can be done using the script in the scripts folder.
 4. Install the controller in your `k8s cluster`` by using the sample deployment file in the project.
 
-### Running on the cluster
+### Build image
 
 1. Install Instances of Custom Resources:
 
@@ -25,17 +25,25 @@ The image for the controller can be found on dockerhub: <https://hub.docker.com/
 kubectl apply -f config/samples/
 ```
 
-2. Build and push your image to the location specified by `IMG`:
+2. Build your image:
 
 ```sh
 make docker-build docker-push IMG=<some-registry>/ingress2acmebotreflector:tag
 ```
+3. Push your image to the image repository location specified by `IMG`:
+
+```sh
+make docker-push docker-push IMG=<some-registry>/ingress2acmebotreflector:tag
+```
+
+### Deploy to cluster from terminal
 
 3. Deploy the controller to the cluster with the image specified by `IMG`:
 
 ```sh
 make deploy IMG=<some-registry>/ingress2acmebotreflector:tag
 ```
+
 
 ### Uninstall CRDs
 

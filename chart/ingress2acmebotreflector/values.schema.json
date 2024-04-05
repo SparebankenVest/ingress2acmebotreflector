@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "default": {},
+  "title": "Values",
+  "required": [
+    "image",
+    "backendURL",
+    "azureClientId",
+    "apiScope",
+    "domains"
+  ],
+  "properties": {
+    "enabled": {
+      "description": "Flag to enable ingress2acmebotreflector used as a subchart in other charts.",
+      "type": "boolean"
+    },
+    "replicaCount": {
+      "description": "How many replicas of the pod to run.",
+        "type": "integer"
+    },
+    "image": {
+      "description": "Container image",
+      "type": "string",
+      "examples": [
+        "<some-registry>/<project-name-bundle>:<tag>"
+      ]
+    },
+    "backendURL": {
+      "description": "URL of acme bot function app.",
+      "type": "string",
+      "examples": [
+        "https://func-keyvault-acme-bot-dev.azurewebsites.net"
+      ]
+    },
+    "azureClientId": {
+      "description": "Azure Application ID of Managed Identity to use.",
+      "type": "string"
+    },
+    "apiScope": {
+      "description": "API scope",
+      "type": "string",
+      "examples": [
+        "api://keyvault-acme-bot-dev"
+      ]
+    },
+    "domains": {
+      "description": "Comma separated list of domains that reflector should watch for.",
+      "type": "string",
+      "examples": [
+        "example.com,example.org"
+      ]
+    },
+    "nameOverride": {
+      "description": "Override name of the chart used in Kubernetes object names.",
+      "type": "string"
+    },
+    "fullnameOverride": {
+      "description": "Override fully qualified app name.",
+      "type": "string"
+    },
+    "serviceAccount": {
+      "description": "Kubernetes sevice account configuration",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "create": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "annotations": {
+          "type": "object"
+        }
+      }
+    },
+    "podAnnotations": {
+      "description": "Annotations to put on pods",
+      "type": "object"
+    },
+    "containerPort": {
+      "type": "integer"
+    },
+    "resources": {
+      "description": "Pod resource requests and limits.",
+      "type": "object",
+      "properties": {
+        "limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "cpu": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "memory": {
+              "type": "string"
+            }
+          }
+        },
+        "requests": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "cpu": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "memory": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "autoscaling": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "minReplicas": {
+          "type": "integer"
+        },
+        "maxReplicas": {
+          "type": "integer"
+        },
+        "targetCPUUtilizationPercentage": {
+          "type": "integer"
+        }
+      },
+      "examples": [{
+        "enabled": false,
+        "minReplicas": 1,
+        "maxReplicas": 100,
+        "targetCPUUtilizationPercentage": 80
+      }]
+    },
+    "nodeSelector": {
+      "type": "object"
+    },
+    "tolerations": {
+      "type": "array"
+    },
+    "affinity": {
+      "type": "object"
+    }
+  }
+}
