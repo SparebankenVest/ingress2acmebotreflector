@@ -60,6 +60,13 @@ UnDeploy the controller from the cluster:
 ```sh
 make undeploy
 ```
+
+## Helm
+The helm repo for the helm chart `chart/ingress2acmebotreflector` is hosted by the github pages for this github repo. Add the repo locally:
+```
+helm repo add ingress2acmebotreflector-repo https://sparebankenvest.github.io/ingress2acmebotreflector/
+```
+
 ### Helm chart installation
 The definition of the helm chart is found in the `chart/ingress2acmebotreflector` directory. 
 #### Install locally
