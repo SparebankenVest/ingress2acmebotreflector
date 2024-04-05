@@ -7,7 +7,7 @@ toolchain go1.22.1
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.11.0
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.5.1
-	github.com/onsi/ginkgo/v2 v2.14.0
+	github.com/onsi/ginkgo/v2 v2.17.1
 	github.com/onsi/gomega v1.30.0
 	k8s.io/api v0.29.3
 	k8s.io/apimachinery v0.29.3
