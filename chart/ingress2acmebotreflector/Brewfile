@@ -1,0 +1,7 @@
+brew 'kind'
+brew 'kubectl'
+brew 'helmfile'
+brew 'helm'
+brew 'chart-testing'
+
+cask 'flux'
