@@ -13,6 +13,9 @@ env:
 jobs:
   lint-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./chart/ingress2acmebotreflector/
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,7 +40,7 @@ jobs:
         shell: bash
         # If there are changes, put a comma separated list of `chart/<chart-name>` as output
         run: |
-          changed=$(ct list-changed --config chart/ingress2acmebotreflector/ct.yml)
+          changed=$(ct list-changed --config ct.yml)
           if [[ -n "$changed" ]]; then
             changed_charts=$(echo $changed | tr ' ' ',')
             echo "changed_charts=$changed_charts" >> "$GITHUB_OUTPUT"
@@ -45,7 +48,7 @@ jobs:
 
       - name: Lint chart
         if: ${{ steps.list-changed.outputs.changed_charts != null }}
-        run: ct lint --config chart/ingress2acmebotreflector/ct.yml
+        run: ct lint --config ct.yml
 
       - name: Setup Flux CLI
         uses: fluxcd/flux2/action@main
