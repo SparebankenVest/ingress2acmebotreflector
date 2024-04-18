@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./chart/ingress2acmebotreflector/
+        working-directory: ./charts/ingress2acmebotreflector/
     steps:
       - name: Checkout
         uses: actions/checkout@v4
