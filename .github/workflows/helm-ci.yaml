@@ -7,9 +7,6 @@ on:
     # paths:
     #   - 'charts/*'
 
-env:
-  EXCLUDED_CHARTS: svai-system # comma-separated
-
 jobs:
   lint-test:
     runs-on: ubuntu-latest
@@ -70,5 +67,5 @@ jobs:
 
       # Run chart tests for changed charts, excluding svai-system
       - name: Run chart-testing (install)
-        run: ct install --config ct.yml  --excluded-charts ${{ env.EXCLUDED_CHARTS }}
+        run: ct install --config ct.yml
         if: ${{ steps.list-changed.outputs.changed_charts != null }}
