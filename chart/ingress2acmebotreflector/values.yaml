@@ -1,6 +1,6 @@
 replicaCount: 1
 
-image: ""
+image: "dokken.azurecr.io/ingress2acmebotreflector:v0.0.11"
 backendURL: ""
 azureClientId: ""
 apiScope: ""
