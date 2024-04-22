@@ -10,9 +10,6 @@ on:
 jobs:
   lint-test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./charts/ingress2acmebotreflector/
     steps:
       - name: Checkout
         uses: actions/checkout@v4
