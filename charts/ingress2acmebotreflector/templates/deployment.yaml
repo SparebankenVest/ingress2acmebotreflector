@@ -40,7 +40,7 @@ spec:
           ports:
             - name: http
               containerPort: {{ .Values.containerPort }}
-              protocol: TCP 
+              protocol: TCP
           livenessProbe:
             httpGet:
               path: /healthz
