@@ -20,7 +20,7 @@ serviceAccount:
 
 podAnnotations: {}
 
-containerPort: 8081 # Port used for liveness/readiness probes.
+containerPort: 8081  # Port used for liveness/readiness probes.
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
