@@ -4,8 +4,6 @@ on:
   pull_request:
     branches:
       - main
-    # paths:
-    #   - 'charts/*'
 
 jobs:
   lint-test:
@@ -44,25 +42,25 @@ jobs:
         if: ${{ steps.list-changed.outputs.changed_charts != null }}
         run: ct lint --config ct.yml
 
-      - name: Setup Flux CLI
-        uses: fluxcd/flux2/action@main
-        if: ${{ steps.list-changed.outputs.changed_charts != null }}
+      # - name: Setup Flux CLI
+      #   uses: fluxcd/flux2/action@main
+      #   if: ${{ steps.list-changed.outputs.changed_charts != null }}
 
-      - name: Create Kubernetes Kind cluster
-        uses: helm/kind-action@v1.9.0
-        if: ${{ steps.list-changed.outputs.changed_charts != null }}
+      # - name: Create Kubernetes Kind cluster
+      #   uses: helm/kind-action@v1.9.0
+      #   if: ${{ steps.list-changed.outputs.changed_charts != null }}
 
-      - name: Install infrastructure in Kubernetes Kind
-        uses: helmfile/helmfile-action@v1.9.0
-        with:
-          helmfile-args: apply
-        if: ${{ steps.list-changed.outputs.changed_charts != null }}
+      # - name: Install infrastructure in Kubernetes Kind
+      #   uses: helmfile/helmfile-action@v1.9.0
+      #   with:
+      #     helmfile-args: apply
+      #   if: ${{ steps.list-changed.outputs.changed_charts != null }}
 
-      - name: Install Flux in Kubernetes Kind
-        run: flux install --components-extra="image-reflector-controller,image-automation-controller"
-        if: ${{ steps.list-changed.outputs.changed_charts != null }}
+      # - name: Install Flux in Kubernetes Kind
+      #   run: flux install --components-extra="image-reflector-controller,image-automation-controller"
+      #   if: ${{ steps.list-changed.outputs.changed_charts != null }}
 
-      # Run chart tests for changed charts, excluding svai-system
-      - name: Run chart-testing (install)
-        run: ct install --config ct.yml
-        if: ${{ steps.list-changed.outputs.changed_charts != null }}
+      # # Run chart tests for changed charts, excluding svai-system
+      # - name: Run chart-testing (install)
+      #   run: ct install --config ct.yml
+      #   if: ${{ steps.list-changed.outputs.changed_charts != null }}

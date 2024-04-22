@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  charts_dir: charts/
+
 jobs:
   release:
     # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
@@ -28,5 +31,8 @@ jobs:
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
+        with:
+          charts_dir: "${{ env.CHARTS_DIR }}"
+          skip_existing: true  # Skip package upload if release/tag already exists
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
