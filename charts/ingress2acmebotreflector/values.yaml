@@ -1,10 +1,10 @@
 replicaCount: 1
 
 image: "dokken.azurecr.io/ingress2acmebotreflector:v0.0.11"
-backendURL: ""
-azureClientId: ""
-apiScope: ""
-domains: ""
+backendURL: "https://func-keyvault-acme-bot-dev.azurewebsites.net" # https://func-keyvault-acme-bot-prod.azurewebsites.net
+azureClientId: "xxxx-xxxx-xxxx-xxx-xxxx"
+apiScope: "api://keyvault-acme-bot-dev" # api://keyvault-acme-bot-prod
+domains: "spvdev.no" # spv.no for prod workloads
 
 nameOverride: ""
 fullnameOverride: ""
@@ -20,7 +20,7 @@ serviceAccount:
 
 podAnnotations: {}
 
-containerPort: 8081 #Port used for liveness/readiness probes.
+containerPort: 8081 # Port used for liveness/readiness probes.
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
