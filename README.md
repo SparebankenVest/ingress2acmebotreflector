@@ -14,15 +14,15 @@ The image for the controller can be found on dockerhub: <https://hub.docker.com/
 
 1. Install [keyvault acmebot](https://github.com/shibayan/keyvault-acmebot) in your azure environment
 2. Set up a the keyvault acmebot the expose an api through the azure portal
-3. Grant the managed-identity of the k8s cluster where the controller is access to the acmebot api, this can be done using the script in the scripts folder.
-4. Install the controller in your `k8s cluster`` by using the sample deployment file in the project.
+3. Grant the managed-identity of the k8s cluster where the controller is access to the acmebot api
+4. Install the controller in your `k8s cluster`` by using either the helm chart or the sample deployment file in the project.
 
 ### Build image
 
 1. Install Instances of Custom Resources:
 
 ```sh
-kubectl apply -f config/samples/
+kubectl apply -f config/deployment/samples/
 ```
 
 2. Build your image:
