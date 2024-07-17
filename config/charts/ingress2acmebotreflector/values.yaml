@@ -4,7 +4,7 @@ image: "spvest/ingress2acmebotreflector:v0.0.13"
 backendURL: "https://func-keyvault-acme-bot-dev.azurewebsites.net"  # https://func-keyvault-acme-bot-prod.azurewebsites.net
 azureClientId: "xxxx-xxxx-xxxx-xxx-xxxx"
 apiScope: "api://keyvault-acme-bot-dev"  # api://keyvault-acme-bot-prod
-domains: "spvdev.no"  # spv.no for prod workloads
+domains: "spvdev.no"  # spv.no for prod workloads. Comma separated list.
 
 nameOverride: ""
 fullnameOverride: ""
