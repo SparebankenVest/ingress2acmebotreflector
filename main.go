@@ -29,7 +29,7 @@ import (
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
-	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"log/slog"
 
 	"github.com/SparebankenVest/ingress2acmebotreflector/controllers"
 	//+kubebuilder:scaffold:imports
@@ -37,12 +37,11 @@ import (
 
 var (
 	scheme   = runtime.NewScheme()
-	setupLog = ctrl.Log.WithName("setup")
+
 )
 
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
-
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -55,13 +54,22 @@ func main() {
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
-	opts := zap.Options{
-		Development: true,
-	}
-	opts.BindFlags(flag.CommandLine)
+
 	flag.Parse()
 
-	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+	lvl := new(slog.LevelVar)
+	
+	if(os.Getenv("LOG_LEVEL") == "INFO") {
+		lvl.Set(slog.LevelInfo)
+	} else {
+		lvl.Set(slog.LevelWarn);
+	}
+
+	jsonHandler := slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: lvl})
+
+	logger := slog.New(jsonHandler)
+
+
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
@@ -81,7 +89,8 @@ func main() {
 		// LeaderElectionReleaseOnCancel: true,
 	})
 	if err != nil {
-		setupLog.Error(err, "unable to start manager")
+		
+		logger.Error("Unable to start manager", err);
 		os.Exit(1)
 	}
 
@@ -89,29 +98,33 @@ func main() {
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Ingress")
+		logger.Error("Unable to create controller", err);
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
 
 	// Probes
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
-		setupLog.Error(err, "unable to set up health check")
+		logger.Error("unable to set up health check", err);
 		os.Exit(1)
 	}
 	if err := mgr.AddReadyzCheck("readyz", healthz.Ping); err != nil {
-		setupLog.Error(err, "unable to set up ready check")
+		logger.Error("unable to set up ready check", err);
 		os.Exit(1)
 	}
 
-	setupLog.Info("starting manager")
+	logger.Info("starting manager")
+	logger.Warn("warn?");
+	logger.Error("error?");
+
 	backend := os.Getenv("BACKEND")
 	azure_ad_client_id := os.Getenv("AZURE_AD_CLIENT_ID")
-	setupLog.Info("ackend: " + backend)
-	setupLog.Info("azure_ad_client_id: " + azure_ad_client_id)
+
+	logger.Info("backend: " + backend)
+	logger.Info("azure_ad_client_id: " + azure_ad_client_id)
 
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
-		setupLog.Error(err, "problem running manager")
+		logger.Error("problem running manager", err);
 		os.Exit(1)
 	}
 }

@@ -81,6 +81,16 @@ The definition of the helm chart is found in the `chart/ingress2acmebotreflector
 
 // TODO(user): Add detailed information on how you would like others to contribute to this project
 
+
+## Local development
+
+1. Start your local Kind cluster to enable easy local development, set correct kubectx
+2. populate the ENV variables needed
+    1. API_SCOPE -> Defined API scope set up for the API access needed in the keyvault acmebot REST API
+    2. DOMAINS -> What domains should the reconciler reconcile?
+    3. AZURE_AD_CLIENT_ID -> Azure Client ID of the cluster the app runs in
+    4. BACKEND -> URL for the keyvault acmebot REST API
+
 ### How it works
 
 This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/).
@@ -131,3 +141,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+

@@ -30,10 +30,11 @@ import (
 	"os"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
 	"strconv"
 	"strings"
 	"time"
+	"log/slog"
+
 )
 
 // IngressReconciler reconciles a Ingress object
@@ -64,7 +65,9 @@ type CertOrder struct {
 }
 
 var myClient = &http.Client{Timeout: 10 * time.Second}
-var logger = log.Log.WithName("ingress_controller")
+
+
+
 
 var api_scope = os.Getenv("API_SCOPE")
 var backend = os.Getenv("BACKEND")
@@ -91,7 +94,7 @@ func getJson(url string, target interface{}, token string) error {
 	return json.NewDecoder(r.Body).Decode(target)
 }
 
-func checkExistingCerts(dnsName string, keyVaultInfoList []KeyVaultInfo) bool {
+func checkExistingCerts(dnsName string, keyVaultInfoList []KeyVaultInfo, logger *slog.Logger) bool {
 	logger.Info("Found " + strconv.Itoa(len(keyVaultInfoList)) + " certs in the keyvault")
 	for _, keyVaultInfo := range keyVaultInfoList {
 		for _, dns := range keyVaultInfo.DNSNames {
@@ -111,7 +114,19 @@ func checkExistingCerts(dnsName string, keyVaultInfoList []KeyVaultInfo) bool {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.1/pkg/reconcile
 func (r *IngressReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	logger = log.FromContext(ctx)
+
+	lvl := new(slog.LevelVar)
+	
+	if(os.Getenv("LOG_LEVEL") == "INFO") {
+		lvl.Set(slog.LevelInfo)
+	} else {
+		lvl.Set(slog.LevelWarn);
+	}
+
+	jsonHandler := slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: lvl})
+
+	logger := slog.New(jsonHandler)
+
 	var ing ingress.Ingress
 
 	flag.Parse()
@@ -120,14 +135,14 @@ func (r *IngressReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 
 	cred, err := azidentity.NewManagedIdentityCredential(opts)
 	if err != nil {
-		logger.Error(err, "unable to create managed identity credential")
+		logger.Error("unable to create managed identity credential", err)
 		return ctrl.Result{}, nil
 	}
 
 	logger.Info("Calling GetToken()...")
 	tk, err := cred.GetToken(context.Background(), policy.TokenRequestOptions{Scopes: []string{*s}})
 	if err != nil {
-		logger.Error(err, "unable to get token")
+		logger.Error("unable to get token", err)
 		return ctrl.Result{}, nil
 	}
 
@@ -137,7 +152,7 @@ func (r *IngressReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 			logger.Info("Ingress resource not found. Ignoring since object must be deleted")
 			return ctrl.Result{}, nil
 		}
-		logger.Error(err, "unable to fetch Ingress")
+		logger.Error("unable to fetch Ingress", err)
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 	if ing.Spec.TLS == nil {
@@ -158,18 +173,18 @@ func (r *IngressReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		}
 	}
 	if !validDomain {
-		logger.Info("Host not in list of supported domains, exiting")
+		logger.Warn("Host " + host + " not in list of supported domains, exiting")
 		return ctrl.Result{}, nil
 	}
 
 	err = getJson(backend+"/api/certificates", &keyVaultInfoList, tk.Token)
 	if err != nil {
-		logger.Error(err, "unable to get cert list")
+		logger.Error("unable to get cert list", err)
 		return ctrl.Result{}, err
 	}
 
 	logger.Info("checking existing certs")
-	existingCerts := checkExistingCerts(host, keyVaultInfoList)
+	existingCerts := checkExistingCerts(host, keyVaultInfoList, logger)
 
 	//if no existing certs, order new cert through the rest api
 	if !existingCerts {
@@ -186,7 +201,7 @@ func (r *IngressReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 
 		response, err := myClient.Do(req)
 		if err != nil {
-			logger.Error(err, "unable to order new cert")
+			logger.Error("unable to order new cert", err)
 			return ctrl.Result{}, err
 		}
 		defer response.Body.Close()
@@ -200,7 +215,7 @@ func (r *IngressReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 		req2.Header.Set("Authorization", "Bearer "+tk.Token)
 
 		if err != nil {
-			logger.Error(err, "unable to get cert status")
+			logger.Error("unable to get cert status", err)
 			return ctrl.Result{}, err
 		} else if resp.StatusCode == 200 {
 			logger.Info("Cert is ready")
