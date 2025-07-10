@@ -63,14 +63,24 @@ type CertOrder struct {
 	DnsNames []string `json:"DnsNames"`
 }
 
-var myClient = &http.Client{Timeout: 10 * time.Second}
-var logger = log.Log.WithName("ingress_controller")
+
 
 var api_scope = os.Getenv("API_SCOPE")
 var backend = os.Getenv("BACKEND")
+var acmebot_rest_api_timeout = 20 // default
 var azure_ad_client_id = os.Getenv("AZURE_AD_CLIENT_ID")
 var domains = strings.Split(os.Getenv("DOMAINS"), ",")
 
+func init() {
+	if v := os.Getenv("ACMEBOT_REST_API_TIMEOUT"); v != "" {
+		if t, err := strconv.Atoi(v); err == nil {
+			acmebot_rest_api_timeout = t
+		} 
+	}
+}
+
+var myClient = &http.Client{Timeout: time.Duration(acmebot_rest_api_timeout) * time.Second}
+var logger = log.Log.WithName("ingress_controller")
 var s = flag.String("s", api_scope+"/.default", "scope for access token")
 
 func getJson(url string, target interface{}, token string) error {
