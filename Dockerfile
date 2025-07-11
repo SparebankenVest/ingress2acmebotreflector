@@ -1,5 +1,6 @@
 # Build the manager binary
 FROM golang:1.24.5 as builder
+
 ARG TARGETOS
 ARG TARGETARCH=amd64
 
