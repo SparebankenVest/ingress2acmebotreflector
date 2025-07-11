@@ -5,7 +5,7 @@ backendURL: "https://func-keyvault-acme-bot-dev.azurewebsites.net"  # https://fu
 azureClientId: "xxxx-xxxx-xxxx-xxx-xxxx"
 apiScope: "api://keyvault-acme-bot-dev"  # api://keyvault-acme-bot-prod
 domains: "spvdev.no"  # spv.no for prod workloads. Comma separated list.
-acmebot_rest_api_timeout: 30  # Timeout for the ACME bot REST API calls.
+acmebot_rest_api_timeout: "30"  # Timeout for the ACME bot REST API calls.
 
 
 nameOverride: ""

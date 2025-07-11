@@ -67,19 +67,22 @@ type CertOrder struct {
 
 var api_scope = os.Getenv("API_SCOPE")
 var backend = os.Getenv("BACKEND")
-var acmebot_rest_api_timeout = 20 // default
+var acmebot_rest_api_timeout = os.Getenv("ACMEBOT_REST_API_TIMEOUT") // default
 var azure_ad_client_id = os.Getenv("AZURE_AD_CLIENT_ID")
 var domains = strings.Split(os.Getenv("DOMAINS"), ",")
+var timeout int = 20 // default
 
 func init() {
-	if v := os.Getenv("ACMEBOT_REST_API_TIMEOUT"); v != "" {
-		if t, err := strconv.Atoi(v); err == nil {
-			acmebot_rest_api_timeout = t
-		} 
+	var err error 
+	 timeout, err = strconv.Atoi(acmebot_rest_api_timeout);
+	if err != nil {
+		// handle error, e.g., log it or set a default value
+		logger.Error(err, "Parsing ACMEBOT_REST_API_TIMEOUT failed, using default value")
+
 	}
 }
 
-var myClient = &http.Client{Timeout: time.Duration(acmebot_rest_api_timeout) * time.Second}
+var myClient = &http.Client{Timeout: time.Duration(timeout) * time.Second}
 var logger = log.Log.WithName("ingress_controller")
 var s = flag.String("s", api_scope+"/.default", "scope for access token")
 

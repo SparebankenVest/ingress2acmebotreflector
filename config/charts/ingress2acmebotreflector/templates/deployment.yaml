@@ -38,7 +38,7 @@ spec:
             - name: DOMAINS
               value: {{ required "Specify domains that ACME bot should watch for." .Values.domains }}
             - name: ACMEBOT_REST_API_TIMEOUT
-              value: {{ .Values.acmebot_rest_api_timeout }}  
+              value: {{ .Values.acmebot_rest_api_timeout | quote }}  
           ports:
             - name: http
               containerPort: {{ .Values.containerPort }}
