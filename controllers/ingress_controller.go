@@ -63,8 +63,6 @@ type CertOrder struct {
 	DnsNames []string `json:"DnsNames"`
 }
 
-
-
 var api_scope = os.Getenv("API_SCOPE")
 var backend = os.Getenv("BACKEND")
 var acmebot_rest_api_timeout = os.Getenv("ACMEBOT_REST_API_TIMEOUT") // default
@@ -73,8 +71,8 @@ var domains = strings.Split(os.Getenv("DOMAINS"), ",")
 var timeout int = 20 // default
 
 func init() {
-	var err error 
-	 timeout, err = strconv.Atoi(acmebot_rest_api_timeout);
+	var err error
+	timeout, err = strconv.Atoi(acmebot_rest_api_timeout)
 	if err != nil {
 		// handle error, e.g., log it or set a default value
 		logger.Error(err, "Parsing ACMEBOT_REST_API_TIMEOUT failed, using default value")
