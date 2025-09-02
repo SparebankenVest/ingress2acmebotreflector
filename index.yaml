@@ -3,6 +3,16 @@ entries:
   ingress-2-acmebot-reflector:
   - apiVersion: v2
     appVersion: 0.1.9
+    created: "2025-09-02T06:07:10.489706381Z"
+    description: A Helm chart for Kubernetes
+    digest: 4a83589774132881ef399cc36423c4557355abad5c0de1f720a53da69fab5609
+    name: ingress-2-acmebot-reflector
+    type: application
+    urls:
+    - https://github.com/SparebankenVest/ingress2acmebotreflector/releases/download/ingress-2-acmebot-reflector-0.1.11/ingress-2-acmebot-reflector-0.1.11.tgz
+    version: 0.1.11
+  - apiVersion: v2
+    appVersion: 0.1.9
     created: "2025-09-02T05:59:53.442896013Z"
     description: A Helm chart for Kubernetes
     digest: ae729bae561872a0ed3cb5bbe127742cc6dbbab8951653797ead265a6a434625
@@ -71,4 +81,4 @@ entries:
     urls:
     - https://github.com/SparebankenVest/ingress2acmebotreflector/releases/download/ingress-2-acmebot-reflector-0.1.3/ingress-2-acmebot-reflector-0.1.3.tgz
     version: 0.1.3
-generated: "2025-09-02T05:59:53.44292632Z"
+generated: "2025-09-02T06:07:10.489738181Z"
