@@ -4,7 +4,6 @@
   "default": {},
   "title": "Values",
   "required": [
-    "image",
     "backendURL",
     "azureClientId",
     "apiScope",
