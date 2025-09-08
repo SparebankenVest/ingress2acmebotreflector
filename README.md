@@ -143,16 +143,16 @@ There are two GHA workflows in this repo used for
 
 #### Build docker image and push to ACR
 
-Create tag on the format `vx.x.x` for releases or `vx.x.x-rc.x` for release candiates
+Create tag on the format `x.x.x` for releases or `x.x.x-rc.x` for release candiates
 
 ```bash
-git tag vx.x.x
+git tag x.x.x
 ```
 
 push tag
 
 ```bash
-git push origin vx.x.x
+git push origin x.x.x
 ```
 
 this triggers the build/push workflow
