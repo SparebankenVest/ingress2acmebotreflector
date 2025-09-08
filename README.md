@@ -131,3 +131,34 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+## Build and Release
+
+### Build with GHA pipelines Docker
+
+There are two GHA workflows in this repo used for
+
+1. Building docker images and push to ACR
+2. Package helm chart and push to ACR
+
+#### Build docker image and push to ACR
+
+Create tag on the format `vx.x.x` for releases or `vx.x.x-rc.x` for release candiates
+
+```bash
+git tag vx.x.x
+```
+
+push tag
+
+```bash
+git push origin vx.x.x
+```
+
+this triggers the build/push workflow
+
+### Helmchart
+
+On a PR, a check will run that lints and testes the helmchart.
+
+Releases is based on the helmchart version defined in `Chart.yaml`. When a PR is merged to main, it will also release the chart.
