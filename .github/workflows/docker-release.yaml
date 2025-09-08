@@ -15,7 +15,7 @@ jobs:
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io/SparebankenVest/ingress2acmebotreflector
+          registry: ghcr.io/SparebankenVest
           username: ${{ github.actor }}
           password: ${{ secrets.GH_TOKEN }} # Use the automatically generated GITHUB_TOKEN
       - run: |
@@ -26,7 +26,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/SparebankenVest/ingress2acmebotreflector
+            ghcr.io/SparebankenVest
           tags: |
             type=semver,pattern={{version}}
 
