@@ -3,8 +3,8 @@ name: Publish Docker Image and GitHub Release on Tag
 on:
   push:
     tags:
-      - 'v*.*.*'
-      - 'v*.*.*-rc.*'
+      - '*.*.*'
+      - '*.*.*-rc.*'
 jobs:
   release:
     runs-on: ubuntu-latest
