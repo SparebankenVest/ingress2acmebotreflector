@@ -1,11 +1,11 @@
 replicaCount: 1
 
-image: "spvest/ingress2acmebotreflector:0.1.9"
+image: "ghcr.io/SparebankenVest/ingress2acmebotreflector:0.1.12"
 backendURL: "https://func-keyvault-acme-bot-dev.azurewebsites.net"  # https://func-keyvault-acme-bot-prod.azurewebsites.net
 azureClientId: "xxxx-xxxx-xxxx-xxx-xxxx"
 apiScope: "api://keyvault-acme-bot-dev"  # api://keyvault-acme-bot-prod
 domains: "spvdev.no"  # spv.no for prod workloads. Comma separated list.
-acmebot_rest_api_timeout: "30"  # Timeout for the ACME bot REST API calls.
+acmebot_rest_api_timeout: "60"  # Timeout for the ACME bot REST API calls.
 
 
 nameOverride: ""
