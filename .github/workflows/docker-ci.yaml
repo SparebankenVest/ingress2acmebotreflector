@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  release:
+  ci:
     runs-on: ubuntu-latest
     permissions:
       contents: write  # for creating releases/tags
@@ -31,6 +31,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: false
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/ingress2acmebotreflector:${{ github.ref_name }}
 
