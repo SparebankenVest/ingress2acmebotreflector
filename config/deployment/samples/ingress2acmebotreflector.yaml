@@ -15,9 +15,24 @@ spec:
         app: ingress2acmebotreflector
     spec:
       serviceAccountName: controller-manager
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: ingress2acmebotreflector
         image: spvest/ingress2acmebotreflector:v0.0.13
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65532
+          capabilities:
+            drop:
+              - ALL
         env:
           - name: BACKEND
             value: https://keyvault-acme-bot-url.com
@@ -83,5 +98,3 @@ subjects:
 - kind: ServiceAccount
   name: controller-manager
   namespace: spv-system
-
-

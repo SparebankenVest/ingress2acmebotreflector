@@ -25,9 +25,24 @@ spec:
         app: {{ include "ingress2acmebotreflector.fullname" . }}
     spec:
       serviceAccountName: {{ include "ingress2acmebotreflector.serviceAccountName" . }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: {{ include "ingress2acmebotreflector.fullname" . }}
           image: {{ .Values.image }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65532
+            capabilities:
+              drop:
+                - ALL
           env:
             - name: BACKEND
               value: {{ required "Specify Backend URL of ACME bot." .Values.backendURL }}
