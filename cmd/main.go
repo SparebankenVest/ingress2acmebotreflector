@@ -31,7 +31,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/SparebankenVest/ingress2acmebotreflector/controllers"
+	controller "github.com/SparebankenVest/ingress2acmebotreflector/internal/controller"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -85,7 +85,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.IngressReconciler{
+	if err = (&controller.IngressReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
