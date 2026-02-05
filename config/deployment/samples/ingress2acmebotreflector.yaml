@@ -49,6 +49,12 @@ spec:
           requests:
             cpu: 100m
             memory: 128Mi
+        volumeMounts:
+          - name: tmp
+            mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: ServiceAccount
