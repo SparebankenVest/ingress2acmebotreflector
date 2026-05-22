@@ -22,6 +22,8 @@ serviceAccount:
 
 podAnnotations: {}
 
+podLabels: {}
+
 containerPort: 8081  # Port used for liveness/readiness probes.
 
 resources: {}

@@ -23,6 +23,9 @@ spec:
       labels:
         {{- include "ingress2acmebotreflector.selectorLabels" . | nindent 8 }}
         app: {{ include "ingress2acmebotreflector.fullname" . }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "ingress2acmebotreflector.serviceAccountName" . }}
       containers:

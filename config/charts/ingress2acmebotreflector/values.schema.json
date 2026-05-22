@@ -78,6 +78,10 @@
       "description": "Annotations to put on pods",
       "type": "object"
     },
+    "podLabels": {
+      "description": "Additional labels to put on pods",
+      "type": "object"
+    },
     "containerPort": {
       "type": "integer"
     },
