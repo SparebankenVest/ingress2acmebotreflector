@@ -20,10 +20,30 @@
     },
     "image": {
       "description": "Container image",
-      "type": "string",
-      "examples": [
-        "<some-registry>/<project-name-bundle>:<tag>"
-      ]
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "repository": {
+          "description": "Image repository without tag.",
+          "type": "string",
+          "examples": [
+            "ghcr.io/sparebankenvest/ingress2acmebotreflector"
+          ]
+        },
+        "tag": {
+          "description": "Image tag. Defaults to the chart appVersion when empty.",
+          "type": "string"
+        },
+        "pullPolicy": {
+          "description": "Image pull policy.",
+          "type": "string",
+          "enum": [
+            "Always",
+            "IfNotPresent",
+            "Never"
+          ]
+        }
+      }
     },
     "backendURL": {
       "description": "URL of acme bot function app.",

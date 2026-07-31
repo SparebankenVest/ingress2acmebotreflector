@@ -31,7 +31,8 @@ spec:
       serviceAccountName: {{ include "ingress2acmebotreflector.serviceAccountName" . }}
       containers:
         - name: {{ include "ingress2acmebotreflector.fullname" . }}
-          image: {{ .Values.image }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: BACKEND
               value: {{ required "Specify Backend URL of ACME bot." .Values.backendURL }}

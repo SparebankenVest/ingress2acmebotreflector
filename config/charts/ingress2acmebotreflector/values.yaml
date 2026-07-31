@@ -1,6 +1,10 @@
 replicaCount: 1
 
-image: "ghcr.io/sparebankenvest/ingress2acmebotreflector:0.1.13"
+image:
+  repository: "ghcr.io/sparebankenvest/ingress2acmebotreflector"
+  # Overrides the image tag. Defaults to the chart's appVersion when empty.
+  tag: ""
+  pullPolicy: IfNotPresent
 backendURL: "https://func-keyvault-acme-bot-dev.azurewebsites.net" # https://func-keyvault-acme-bot-prod.azurewebsites.net
 azureClientId: "xxxx-xxxx-xxxx-xxx-xxxx"
 apiScope: "api://keyvault-acme-bot-dev" # api://keyvault-acme-bot-prod
