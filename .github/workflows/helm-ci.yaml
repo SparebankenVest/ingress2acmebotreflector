@@ -6,6 +6,24 @@ on:
       - main
 
 jobs:
+  version-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure image tag defaults to appVersion (no drift)
+        shell: bash
+        run: |
+          chart_dir="config/charts/ingress2acmebotreflector"
+          # image.tag must stay empty so the deployed image tracks Chart.yaml appVersion.
+          tag="$(yq '.image.tag' "$chart_dir/values.yaml")"
+          if [[ "$tag" != "" && "$tag" != "null" ]]; then
+            echo "::error file=$chart_dir/values.yaml::image.tag is pinned to '$tag'. Leave it empty so the image tracks Chart.yaml appVersion, then bump appVersion instead."
+            exit 1
+          fi
+          echo "OK: image.tag is empty; image tracks appVersion."
+
   lint-test:
     runs-on: ubuntu-latest
     steps:

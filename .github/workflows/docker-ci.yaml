@@ -1,4 +1,4 @@
-name: Build Docker Image on PR
+name: Build and Push Pre-release Docker Image on PR
 
 on:
   pull_request:
@@ -9,11 +9,23 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # for creating releases/tags
+      contents: read
       packages: write  # for pushing to ghcr
     steps:
       - name: 👀 Checkout
         uses: actions/checkout@v4
+
+      - name: 🏷️ Compute image tag
+        id: meta
+        shell: bash
+        run: |
+          set -euo pipefail
+          app_version="$(yq '.appVersion' config/charts/ingress2acmebotreflector/Chart.yaml)"
+          short_sha="$(git rev-parse --short "${{ github.event.pull_request.head.sha }}")"
+          tag="${app_version}-pre.${{ github.event.pull_request.number }}.${short_sha}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Pre-release image tag: $tag"
+
       - name: 🏗️ Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: 🏗️ Set up Docker Buildx
@@ -25,10 +37,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 📦 Build Docker image
+      - name: 📦 Build and push pre-release Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           platforms: linux/amd64
-          push: false
+          push: true
+          tags: |
+            ghcr.io/sparebankenvest/ingress2acmebotreflector:${{ steps.meta.outputs.tag }}
 
+      - name: 💬 Summary
+        shell: bash
+        run: |
+          echo "Pushed pre-release image:" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          echo "ghcr.io/sparebankenvest/ingress2acmebotreflector:${{ steps.meta.outputs.tag }}" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"

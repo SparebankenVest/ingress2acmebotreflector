@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.16
+
+- restructure `image` value into `repository`/`tag`/`pullPolicy`; image tag now
+  defaults to the chart `appVersion`, removing version drift between the chart
+  and the deployed image
+
+### Security Patch
+
+- bump `golang.org/x/crypto` to `v0.52.0` to address CVE-2026-39830
+- bump `golang.org/x/net` to `v0.55.0` to address CVE-2026-39821
+
 ## 0.1.15
 
 - add default container security context

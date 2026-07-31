@@ -4,7 +4,7 @@ A simple k8s controller that works with the <https://github.com/shibayan/keyvaul
 The application works from inside the cluster by watching all ingress resources and every time an ingress resource is changed or created it checks the acmebot api if a
 tls cert exists for the given ingress, and if not it orders a cert for the domain in question.
 
-The image for the controller can be found on dockerhub: <https://hub.docker.com/r/spvest/ingress2acmebotreflector>
+The image for the controller is published to GitHub Container Registry: <https://github.com/SparebankenVest/ingress2acmebotreflector/pkgs/container/ingress2acmebotreflector>
 
 ## Description
 
@@ -134,31 +134,56 @@ limitations under the License.
 
 ## Build and Release
 
-### Build with GHA pipelines Docker
+Both the application image and the Helm chart are versioned from a single
+source of truth: the `appVersion` field in
+`config/charts/ingress2acmebotreflector/Chart.yaml`. The chart deploys the image
+tag matching `appVersion` by default (see `image.tag` in `values.yaml`), so you
+do not maintain the image tag separately.
 
-There are two GHA workflows in this repo used for
+### Versioning model
 
-1. Building docker images and push to ACR
-2. Package helm chart and push to ACR
+- **App image version** = `appVersion` in `Chart.yaml`.
+- **Chart version** = `version` in `Chart.yaml` (bump on any chart change).
 
-#### Build docker image and push to ACR
+There are no manual `git tag` steps — tags and GitHub Releases are created
+automatically when a version is merged to `main`.
 
-Create tag on the format `x.x.x` for releases or `x.x.x-rc.x` for release candiates
+### Release flow
 
-```bash
-git tag x.x.x
-```
+1. Create a branch and bump the version(s) in
+   `config/charts/ingress2acmebotreflector/Chart.yaml`:
+   - Bump `appVersion` when the application code changes.
+   - Bump `version` for any chart change (required for a new chart release).
+   - Add a matching entry to the chart `CHANGELOG.md`.
+2. Open a PR against `main`. On the PR:
+   - `docker-ci.yaml` builds and pushes a **pre-release image** tagged
+     `ghcr.io/sparebankenvest/ingress2acmebotreflector:<appVersion>-pre.<PR#>.<shortsha>`
+     that you can pull and test. The exact tag is shown in the workflow summary.
+   - `helm-ci.yaml` lints and install-tests the chart, and guards against image
+     tag drift (`image.tag` must stay empty so it tracks `appVersion`).
+3. Merge to `main`. On merge:
+   - `docker-publish.yaml` reads `appVersion`. If that image tag does not already
+     exist, it builds a **multi-arch** (`linux/amd64,linux/arm64`) image, pushes
+     `ghcr.io/sparebankenvest/ingress2acmebotreflector:<appVersion>`, creates the
+     git tag `<appVersion>`, and cuts a GitHub Release with generated notes. If
+     the tag already exists (a merge that did not bump `appVersion`), this step is
+     skipped.
+   - `helm-release.yaml` packages and publishes the chart via
+     `chart-releaser` when `version` in `Chart.yaml` was bumped (unchanged
+     versions are skipped).
 
-push tag
+### Pre-release / release-candidate images
 
-```bash
-git push origin x.x.x
-```
+Every PR push produces a unique immutable `-pre.<PR#>.<shortsha>` image for
+testing. These are only built for PRs; the final semver image is published only
+on merge to `main`.
 
-this triggers the build/push workflow
+### Workflows summary
 
-### Helmchart
+| Workflow | Trigger | Purpose |
+| --- | --- | --- |
+| `docker-ci.yaml` | PR to `main` | Build + push `<appVersion>-pre.<PR#>.<sha>` image |
+| `docker-publish.yaml` | Push to `main` | Publish `<appVersion>` image, git tag, GitHub Release |
+| `helm-ci.yaml` | PR to `main` | Lint/test chart + image-tag drift guard |
+| `helm-release.yaml` | Push to `main` | Package + publish Helm chart |
 
-On a PR, a check will run that lints and testes the helmchart.
-
-Releases is based on the helmchart version defined in `Chart.yaml`. When a PR is merged to main, it will also release the chart.
