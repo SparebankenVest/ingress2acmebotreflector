@@ -1,3 +1,4 @@
+# yamllint disable-file
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -41,7 +42,7 @@ spec:
             - name: DOMAINS
               value: {{ required "Specify domains that ACME bot should watch for." .Values.domains }}
             - name: ACMEBOT_REST_API_TIMEOUT
-              value: {{ .Values.acmebot_rest_api_timeout | quote }}  
+              value: {{ .Values.acmebot_rest_api_timeout | quote }}
           ports:
             - name: http
               containerPort: {{ .Values.containerPort }}
@@ -54,6 +55,8 @@ spec:
             httpGet:
               path: /readyz
               port: http
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

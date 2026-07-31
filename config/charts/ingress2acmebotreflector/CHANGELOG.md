@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.15
+
+- add default container security context
+- add default CPU request
+
 ## 0.1.14
 
 - add support for additional pod labels via `podLabels`

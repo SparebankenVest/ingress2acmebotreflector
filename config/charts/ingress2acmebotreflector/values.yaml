@@ -1,12 +1,11 @@
 replicaCount: 1
 
 image: "ghcr.io/sparebankenvest/ingress2acmebotreflector:0.1.13"
-backendURL: "https://func-keyvault-acme-bot-dev.azurewebsites.net"  # https://func-keyvault-acme-bot-prod.azurewebsites.net
+backendURL: "https://func-keyvault-acme-bot-dev.azurewebsites.net" # https://func-keyvault-acme-bot-prod.azurewebsites.net
 azureClientId: "xxxx-xxxx-xxxx-xxx-xxxx"
-apiScope: "api://keyvault-acme-bot-dev"  # api://keyvault-acme-bot-prod
-domains: "spvdev.no"  # spv.no for prod workloads. Comma separated list.
-acmebot_rest_api_timeout: "60"  # Timeout for the ACME bot REST API calls.
-
+apiScope: "api://keyvault-acme-bot-dev" # api://keyvault-acme-bot-prod
+domains: "spvdev.no" # spv.no for prod workloads. Comma separated list.
+acmebot_rest_api_timeout: "60" # Timeout for the ACME bot REST API calls.
 
 nameOverride: ""
 fullnameOverride: ""
@@ -24,19 +23,23 @@ podAnnotations: {}
 
 podLabels: {}
 
-containerPort: 8081  # Port used for liveness/readiness probes.
+containerPort: 8081 # Port used for liveness/readiness probes.
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, adjust them as necessary.
+resources:
+  requests:
+    cpu: 10m
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65532
 
 autoscaling:
   enabled: false
