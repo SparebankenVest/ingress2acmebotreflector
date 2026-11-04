@@ -1,6 +1,28 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>SparebankenVest/renovate-config"
+    "local>SparebankenVest/renovate-config:renovate-go"
+  ],
+  "bumpVersions": [
+    {
+      "name": "Chart version",
+      "filePatterns": [
+        "config/charts/ingress2acmebotreflector/Chart.yaml"
+      ],
+      "bumpType": "patch",
+      "matchStrings": [
+        "(?m)^version:\\s*(?<version>\\d+\\.\\d+\\.\\d+)"
+      ]
+    },
+    {
+      "name": "Chart appVersion",
+      "filePatterns": [
+        "config/charts/ingress2acmebotreflector/Chart.yaml"
+      ],
+      "bumpType": "patch",
+      "matchStrings": [
+        "(?m)^appVersion:\\s*\"(?<version>\\d+\\.\\d+\\.\\d+)\""
+      ]
+    }
   ]
 }
