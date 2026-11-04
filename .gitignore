@@ -24,3 +24,8 @@ Dockerfile.cross
 *.swp
 *.swo
 *~
+
+.gocache/*
+.gomodcache/*
+.gopath/*
+.vscode/*
