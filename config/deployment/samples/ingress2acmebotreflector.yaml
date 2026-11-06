@@ -14,6 +14,7 @@ spec:
       labels:
         app: ingress2acmebotreflector
     spec:
+      automountServiceAccountToken: false
       serviceAccountName: controller-manager
       containers:
       - name: ingress2acmebotreflector
